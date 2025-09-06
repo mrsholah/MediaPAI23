@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Form Anggota Cyber Media PAI 23</title>
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0; padding: 0;
+    background: linear-gradient(to bottom, #4fc3f7, #0288d1);
+    color: #fff; min-height: 100vh;
+  }
+  header {
+    position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
+    display: flex; justify-content: center; align-items: center;
+    transition: all 0.4s ease; padding: 8px 0;
+  }
+  header img { margin-top: -30px; width: 300px; transition: all 0.4s ease;
+    border-radius: 50%; }
+  header.shrink { padding: 4px 0; }
+  header.shrink img { width: 200px; }
+  .content { max-width: 500px; margin: 120px auto 40px; padding: 20px; text-align: center; }
+  .box {
+    background: rgba(255, 255, 255, 0.15); border-radius: 15px;
+    box-shadow: 0px 5px 20px rgba(0,0,0,0.3); backdrop-filter: blur(10px);
+    padding: 20px; margin-top: 50px;
+  }
+  form { display: flex; flex-direction: column; gap: 12px; text-align: left; }
+  form label { font-weight: bold; margin-top: 6px; }
+  form input {
+    width: 90%; padding: 12px;
+    border-radius: 8px; border: none; font-size: 15px; outline: none;
+  }
+  form button {
+    padding: 10px; border-radius: 8px; background: #0abab5; color: #fff;
+    font-weight: bold; border: none; cursor: pointer; transition: 0.3s;
+  }
+  form button:hover { background: #089e9a; transform: scale(1.05); }
+  .switch-btn, .forgot-link {
+    margin-top: 10px; background: transparent; border: none;
+    color: #ffeb3b; cursor: pointer; font-size: 14px; text-decoration: underline;
+  }
+  .spinner {
+    border: 3px solid #f3f3f3; border-top: 3px solid #3498db;
+    border-radius: 50%; width: 16px; height: 16px;
+    animation: spin 1s linear infinite; display: inline-block;
+    vertical-align: middle; margin-left: 8px;
+  }
+  @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<header id="mainHeader">
+  <img src="cyber.png" alt="Logo Cyber Media">
+</header>
+
+<div class="content">
+  <div class="box">
+    <h2 id="formTitle">REGISTRASI TIM CYBER MEDIA PAI 23</h2>
+    <form id="myForm">
+      <div id="formFields">
+        <label>Nama:</label>
+        <input type="text" name="nama" required>
+        <label>Buat Sandi:</label>
+        <input type="text" name="nim" required>
+      </div>
+      <button type="submit" id="formSubmitBtn">Daftar</button>
+    </form>
+    <button class="switch-btn" id="switchBtn">Sudah punya akun? Login</button>
+    <p><a href="sandi.html" class="forgot-link">Lupa sandi?</a></p>
+    <p id="status"></p>
+  </div>
+</div>
+
+<script>
+const scriptURL = "https://script.google.com/macros/s/AKfycby_7NpkJVfVdCjY7p0whNNJpXVVIlEptzC5Am7wg9khc_AkShVali-Qu0MunqQCUWcKFw/exec";
+const ADMIN_WA = "6281234567890"; 
+let aData = [];
+let mode = "daftar";
+
+function setLoading(button, isLoading, text) {
+  if (isLoading) {
+    button.disabled = true;
+    button.innerHTML = text + ' <span class="spinner"></span>';
+  } else {
+    button.disabled = false;
+    button.innerHTML = text;
+  }
+}
+
+// shrink header
+const header = document.getElementById("mainHeader");
+window.addEventListener("scroll", () => {
+  if (window.scrollY > 50) header.classList.add("shrink");
+  else header.classList.remove("shrink");
+});
+
+// switch form daftar <-> login
+document.getElementById("switchBtn").addEventListener("click", () => {
+  const formTitle = document.getElementById("formTitle");
+  const submitBtn = document.getElementById("formSubmitBtn");
+  const switchBtn = document.getElementById("switchBtn");
+  const formFields = document.getElementById("formFields");
+  setLoading(switchBtn, true, switchBtn.innerText);
+  setTimeout(() => {
+    if (mode === "daftar") {
+      mode = "login";
+      formTitle.innerText = "LOGIN";
+      submitBtn.innerText = "Login";
+      switchBtn.innerText = "Belum punya akun? Daftar";
+      formFields.innerHTML = `
+        <label>Nama:</label>
+        <input type="text" id="loginNama" required>
+        <label>Sandi:</label>
+        <input type="text" id="loginNim" required>
+      `;
+    } else {
+      mode = "daftar";
+      formTitle.innerText = "REGISTRASI TIM CYBER MEDIA PAI 23";
+      submitBtn.innerText = "Daftar";
+      switchBtn.innerText = "Sudah punya akun? Login";
+      formFields.innerHTML = `
+        <label>Nama:</label>
+        <input type="text" name="nama" required>
+        <label>Sandi:</label>
+        <input type="text" name="nim" required>
+      `;
+    }
+    setLoading(switchBtn, false, switchBtn.innerText);
+  }, 1000);
+});
+
+// submit form
+document.getElementById("myForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const submitBtn = document.getElementById("formSubmitBtn");
+  setLoading(submitBtn, true, submitBtn.innerText);
+  setTimeout(() => {
+    if (mode === "daftar") {
+      const namaBaru = document.querySelector("input[name='nama']").value.trim().toLowerCase();
+      const sudahAdaNama = aData.some(row => {
+        const rowNama = row.nama ? String(row.nama).trim().toLowerCase() : "";
+        return rowNama === namaBaru;
+      });
+      if (sudahAdaNama) {
+        document.getElementById("status").innerText = "❌ Nama sudah terdaftar, login saja.";
+        setLoading(submitBtn, false, "Daftar");
+        return;
+      }
+
+      const enteredPass = prompt("Masukkan sandi admin untuk daftar:");
+      if (enteredPass !== "DINDA") {
+        document.getElementById("status").innerText = "❌ Sandi salah! Tidak bisa daftar.";
+        setLoading(submitBtn, false, "Daftar");
+        return;
+      }
+
+      const formData = new FormData(e.target);
+      fetch(scriptURL, { method: "POST", body: formData })
+        .then(res => res.text())
+        .then(txt => {
+          document.getElementById("status").innerText = txt;
+          e.target.reset();
+          setTimeout(() => { window.location.href = "editor.html"; }, 1200);
+        })
+        .catch(err => { document.getElementById("status").innerText = "Gagal: " + err; })
+        .finally(() => setLoading(submitBtn, false, "Daftar"));
+    } else {
+      const nama = document.getElementById("loginNama").value.trim().toLowerCase();
+      const nim = document.getElementById("loginNim").value.trim().toLowerCase();
+      const user = aData.find(row => {
+        const rowNama = row.nama ? String(row.nama).trim().toLowerCase() : "";
+        const rowNim  = row.nim ? String(row.nim).trim().toLowerCase() : "";
+        return rowNama === nama && rowNim === nim;
+      });
+      if (user) {
+        document.getElementById("status").innerText = "✅ Login berhasil!";
+        setTimeout(() => { window.location.href = "editor.html"; }, 1000);
+      } else {
+        document.getElementById("status").innerText = "❌ Nama atau Sandi salah.";
+      }
+      setLoading(submitBtn, false, "Login");
+    }
+  }, 1000);
+});
+
+// load data untuk validasi
+function loadData() {
+  fetch(scriptURL)
+    .then(res => res.json())
+    .then(data => { aData = data; })
+    .catch(err => console.error("Error ambil data:", err));
+}
+loadData();
+</script>
+</body>
+</html>
