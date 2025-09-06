@@ -93,7 +93,7 @@
 
 <script>
 const SANDI = "DINDA"; 
-const ADMIN_WA = "6281234567890"; // ganti nomor WA admin
+const ADMIN_WA = "6283852679506"; // ganti nomor WA admin
 const scriptURL = "https://script.google.com/macros/s/AKfycbw-Jarw88Iv8ETQiDoFxVzl8j8oMqOyIvcyiwDesnWiSKDwRwWU-EutNAFDTSsLBAGF5Q/exec";
 
 const form = document.getElementById("formBerita");
@@ -114,7 +114,7 @@ function setLoading(button, isLoading, originalText) {
 
 function hubungiAdmin(aksi, nama="") {
   const pesan = `Assalamualaikum admin, saya lupa sandi untuk ${aksi} berita di Cyber Media PAI 23${nama ? " atas nama "+nama : ""}.`;
-  if(confirm("Sandi salah. Mau hubungi admin untuk dapat sandi?")) {
+  if(confirm("Sandi salah. Hubungi admin untuk mendapatkan sandi?")) {
     window.location.href = `https://wa.me/${ADMIN_WA}?text=${encodeURIComponent(pesan)}`;
   }
 }
