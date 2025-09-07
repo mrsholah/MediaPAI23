@@ -27,6 +27,7 @@
   height: 180px;       /* sama tinggi dengan sebelumnya */
   object-fit: cover;   /* pastikan gambar penuh */
 }
+
 /* Reset & Font */
 * {margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Tahoma,sans-serif;}
 body {background:#f5f7fa; color:#222; line-height:1.6; transition: background 0.3s, color 0.3s;}
@@ -97,13 +98,34 @@ header.shrink {padding:10px 10px;}
 .popup-bg.show {display:flex;}
 .popup-content {background:#fff; border-radius:10px; padding:20px; max-width:650px; width:100%; max-height:90vh; overflow-y:auto; box-shadow:0 6px 20px rgba(0,0,0,0.3); animation:fadeIn .3s ease; position:relative;}
 @keyframes fadeIn {from{transform:scale(.95); opacity:0;} to{transform:scale(1); opacity:1;}}
-#shareBtn {position:absolute; top:15px; right:15px; padding:6px 12px; background:#039be5; color:#fff; border:none; border-radius:6px; cursor:pointer; font-weight:bold;}
+#shareBtn {position:absolute; top:15px; right:50px; padding:6px 12px; background:#039be5; color:#fff; border:none; border-radius:6px; cursor:pointer; font-weight:bold;}
 #shareBtn:hover {background:#0288d1;}
 .popup-content img {width:100%; height:300px; object-fit:cover; border-radius:8px; margin-bottom:15px;}
 #popupTitle {font-size:1.4rem; margin-bottom:5px;}
 #popupMeta {color:#777; font-size:.9rem;}
 #popupIsi {margin-top:15px; font-size:1rem;}
 
+.close-popup {
+  position: absolute;
+  top: 4px;
+  right: 10px;
+  font-size: 3rem;      /* simbol × besar */
+  width: auto;           /* ukuran kotak mengikuti teks */
+  height: auto;
+  line-height: normal;
+  text-align: center;
+  background: transparent; /* hilangkan background */
+  border: none;
+  cursor: pointer;
+  color: #555;
+  font-weight: bold;
+  transition: color 0.2s;
+  z-index: 1001;
+}
+
+.close-popup:hover {
+  color: #039be5; /* warnanya berubah saat hover */
+}
 /* Komentar */
 .comment-section {margin-top:30px; padding:20px; background:#fff; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.1);}
 .comment-section h3 {margin-bottom:10px; color:#039be5;}
@@ -135,7 +157,6 @@ footer small {display:block; margin-top:10px; color:#e0e0e0;}
         <p>Seputar Kabar Kelas PAI 2023 UIN Madura</p>
       </div>
     </div>
-    
   </div>
 </header>
 
@@ -162,6 +183,9 @@ footer small {display:block; margin-top:10px; color:#e0e0e0;}
 <!-- Popup -->
 <div class="popup-bg" id="popupBg">
   <div class="popup-content">
+    <!-- Tombol silang -->
+    <button id="closePopup" class="close-popup">×</button>
+
     <button id="shareBtn">🔗 Bagikan</button>
     <div id="popupLoader" class="loader-wrapper"><div class="loader"></div></div>
     <div id="popupBody" style="display:none;">
@@ -262,6 +286,9 @@ function showPopup(row,index){
 function closePopup(){document.getElementById("popupBg").classList.remove("show"); history.pushState({}, "", window.location.pathname);}
 window.addEventListener('popstate',()=>{if(document.getElementById("popupBg").classList.contains("show")) closePopup();});
 
+// Tombol silang popup
+document.getElementById("closePopup").addEventListener("click", closePopup);
+
 // Komentar
 function loadKomentar(){
   fetch(komentarURL)
@@ -294,7 +321,8 @@ window.addEventListener("scroll",()=>{
   else{header.classList.remove("shrink");}
 });
 
-loadNews(); loadKomentar();
+loadNews(); 
+loadKomentar();
 </script>
 </body>
 </html>
