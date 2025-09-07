@@ -76,7 +76,7 @@
 
 <script>
 const scriptURL = "https://script.google.com/macros/s/AKfycby_7NpkJVfVdCjY7p0whNNJpXVVIlEptzC5Am7wg9khc_AkShVali-Qu0MunqQCUWcKFw/exec";
-const ADMIN_WA = "6281234567890"; 
+const ADMIN_WA = "6283852679506"; 
 let aData = [];
 let mode = "daftar";
 
@@ -154,6 +154,11 @@ document.getElementById("myForm").addEventListener("submit", e => {
       if (enteredPass !== "DINDA") {
         document.getElementById("status").innerText = "❌ Sandi salah! Tidak bisa daftar.";
         setLoading(submitBtn, false, "Daftar");
+
+        // Tambahan konfirmasi untuk hubungi WA admin
+        if (confirm("Sandi salah. Hubungi admin untuk mendapatkan sandi?")) {
+          window.open(`https://wa.me/${ADMIN_WA}?text=Halo Admin, saya ingin mendaftar. Mohon berikan sandi admin.`, "_blank");
+        }
         return;
       }
 
