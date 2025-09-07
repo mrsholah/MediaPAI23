@@ -72,7 +72,7 @@
     <label>Penulis:</label>
     <input type="text" name="pembuat" required>
 
-    <label>Link Gambar (Opsional):</label>
+    <label>Link Gambar/Kosongkan:</label>
     <input type="url" name="gambar" placeholder="https://i.imgur.com/contoh.jpg">
 
     <label>Judul:</label>
@@ -93,7 +93,7 @@
 
 <script>
 const SANDI = "DINDA"; 
-const ADMIN_WA = "6283852679506"; // ganti nomor WA admin
+const ADMIN_WA = "6281234567890"; // ganti nomor WA admin
 const scriptURL = "https://script.google.com/macros/s/AKfycbw-Jarw88Iv8ETQiDoFxVzl8j8oMqOyIvcyiwDesnWiSKDwRwWU-EutNAFDTSsLBAGF5Q/exec";
 
 const form = document.getElementById("formBerita");
@@ -114,7 +114,7 @@ function setLoading(button, isLoading, originalText) {
 
 function hubungiAdmin(aksi, nama="") {
   const pesan = `Assalamualaikum admin, saya lupa sandi untuk ${aksi} berita di Cyber Media PAI 23${nama ? " atas nama "+nama : ""}.`;
-  if(confirm("Sandi salah. Hubungi admin untuk mendapatkan sandi?")) {
+  if(confirm("Sandi salah. Mau hubungi admin untuk dapat sandi?")) {
     window.location.href = `https://wa.me/${ADMIN_WA}?text=${encodeURIComponent(pesan)}`;
   }
 }
@@ -130,11 +130,17 @@ form.addEventListener("submit", e => {
 
   setLoading(submitBtn, true, "SUBMIT");
   const formData = new FormData(form);
-  if (!form.gambar.value.trim()) formData.set("gambar", "");
+
+  // Gambar sepenuhnya opsional
+  if (!formData.get("gambar")) formData.set("gambar", "");
 
   fetch(scriptURL, { method:"POST", body:formData })
     .then(res => res.text())
-    .then(txt => { status.innerText = txt; form.reset(); loadNews(); })
+    .then(txt => { 
+      status.innerText = txt; 
+      form.reset(); 
+      loadNews(); 
+    })
     .catch(err => { status.innerText = "Gagal: "+err; })
     .finally(() => setLoading(submitBtn, false, "SUBMIT"));
 });
@@ -152,7 +158,7 @@ function loadNews() {
         card.innerHTML = `
           ${row.gambar ? `<img id="img-${i}" src="${row.gambar}" alt="Gambar Berita" onclick="toggleIsi(${i})">` : ""}
           <h3 onclick="toggleIsi(${i})">${row.judul}</h3>
-          <div class="meta">${row.tanggal} | Oleh: ${row.pembuat || "-"}</div>
+          <div class="meta">${row.tanggal || ""} | Oleh: ${row.pembuat || "-"}</div>
           <div id="isi-${i}" class="isi">
             <p>${row.isi}</p>
             <div class="actions">
@@ -192,7 +198,7 @@ function startEdit(i) {
       isiDiv.innerHTML = `
         <label>Penulis:</label>
         <input type="text" id="editPembuat-${i}" value="${row.pembuat || ""}">
-        <label>Link Gambar:</label>
+        <label>Link Gambar (Opsional):</label>
         <input type="url" id="editGambar-${i}" value="${row.gambar || ""}">
         <label>Judul:</label>
         <input type="text" id="editJudul-${i}" value="${row.judul}">
